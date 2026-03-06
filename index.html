@@ -171,12 +171,14 @@
     .hero-badge i { font-size: 0.65rem; }
 
     .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-size: clamp(2rem, 3.5vw, 3rem);
       font-weight: 900;
       color: var(--white);
-      line-height: 1.1;
+      line-height: 1.2;
       letter-spacing: -0.03em;
       margin-bottom: 1.75rem;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
     .hero h1 .gradient-text {
       background: linear-gradient(135deg, var(--accent2) 0%, var(--purple) 100%);
@@ -186,12 +188,13 @@
     }
 
     .hero-sub {
-      font-size: 1.125rem;
+      font-size: 1.05rem;
       color: var(--muted);
-      max-width: 520px;
+      max-width: 640px;
       margin: 0 auto 3rem;
       line-height: 1.8;
       font-weight: 400;
+      word-break: keep-all;
     }
 
     .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 4rem; }
