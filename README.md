@@ -37,7 +37,7 @@ web-welcome/
 | ロール | 説明 |
 |--------|------|
 | **FD-E** | Engineering（技術） |
-| **FD-C** | Consulting（顧客・事業） |
+| **FD-C** | Coordinating（顧客・事業） |
 
 技術（FD-E）と顧客・事業（FD-C）は上下関係ではなく、相互補完の関係です。
 
