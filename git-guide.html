@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git &amp; GitHub ガイド | ted-occ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #060910;
+      --dark:     #0d1117;
+      --card:     #111827;
+      --border:   #1f2937;
+      --border2:  #374151;
+      --muted:    #e2e8f0;
+      --text:     #d1d5db;
+      --white:    #f9fafb;
+      --accent:   #3b82f6;
+      --accent2:  #60a5fa;
+      --purple:   #8b5cf6;
+      --green:    #10b981;
+      --cyan:     #06b6d4;
+      --orange:   #f59e0b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 0 2.5rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(6, 9, 16, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: white;
+      font-weight: 900;
+    }
+    .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.06); }
+    .nav-cta {
+      background: var(--accent);
+      color: white !important;
+      border-radius: 8px;
+      padding: 0.4rem 1rem !important;
+    }
+    .nav-cta:hover { background: var(--accent2) !important; color: white !important; }
+
+    /* ── HERO ── */
+    .page-hero {
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+    }
+    .orb-1 { width: 500px; height: 500px; background: var(--accent); top: -200px; right: -100px; }
+    .orb-2 { width: 400px; height: 400px; background: var(--purple); bottom: -150px; left: -100px; }
+    .page-hero-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+    .page-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      padding: 0.4rem 1.2rem;
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 999px;
+      background: rgba(59,130,246,0.08);
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(8px);
+    }
+    .page-hero h1 {
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent2) 0%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-hero p {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ── CONTENT ── */
+    .content-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* TOC */
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 3rem;
+    }
+    .toc-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .toc-title::before {
+      content: '';
+      width: 16px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+    .toc ol {
+      list-style: none;
+      counter-reset: toc;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .toc li { counter-increment: toc; }
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.3rem 0;
+      transition: color 0.2s;
+    }
+    .toc a::before {
+      content: counter(toc, decimal-leading-zero);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      min-width: 1.5rem;
+    }
+    .toc a:hover { color: var(--accent2); }
+
+    /* Sections */
+    .guide-section {
+      margin-bottom: 3.5rem;
+    }
+    .guide-section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 0.75rem;
+    }
+    .guide-section-eyebrow::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+    .guide-section h2 {
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      line-height: 1.3;
+    }
+    .guide-section p {
+      color: var(--muted);
+      font-size: 0.925rem;
+      line-height: 1.85;
+      margin-bottom: 1rem;
+    }
+    .guide-section p:last-child { margin-bottom: 0; }
+
+    /* Info card */
+    .info-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem 1.75rem;
+      margin: 1.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .info-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px 0 0 3px;
+    }
+    .info-card.blue::after { background: var(--accent); }
+    .info-card.green::after { background: var(--green); }
+    .info-card.purple::after { background: var(--purple); }
+    .info-card.orange::after { background: var(--orange); }
+    .info-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+    .info-card-header i {
+      font-size: 0.9rem;
+    }
+    .info-card.blue .info-card-header i { color: var(--accent2); }
+    .info-card.green .info-card-header i { color: var(--green); }
+    .info-card.purple .info-card-header i { color: var(--purple); }
+    .info-card.orange .info-card-header i { color: var(--orange); }
+    .info-card-header span {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .info-card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 0.5rem;
+    }
+    .info-card p:last-child { margin-bottom: 0; }
+
+    /* Concept cards grid */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .concept-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      transition: all 0.3s;
+    }
+    .concept-card:hover { border-color: var(--border2); }
+    .concept-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+    }
+    .concept-card:nth-child(1) .concept-icon { background: rgba(59,130,246,0.12); color: var(--accent2); }
+    .concept-card:nth-child(2) .concept-icon { background: rgba(16,185,129,0.12); color: var(--green); }
+    .concept-card:nth-child(3) .concept-icon { background: rgba(139,92,246,0.12); color: var(--purple); }
+    .concept-card:nth-child(4) .concept-icon { background: rgba(6,182,212,0.12); color: var(--cyan); }
+    .concept-card h3 { font-size: 0.9rem; font-weight: 700; color: var(--white); margin-bottom: 0.35rem; }
+    .concept-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.65; margin-bottom: 0; }
+
+    /* Code block */
+    .code-block {
+      background: #0a0e1a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.82rem;
+      color: var(--green);
+      margin: 1rem 0;
+      overflow-x: auto;
+      line-height: 1.8;
+    }
+    .code-block .comment { color: var(--muted); opacity: 0.5; }
+    .code-block .prompt { color: var(--accent2); user-select: none; }
+
+    /* Steps */
+    .guide-steps { display: flex; flex-direction: column; gap: 0; margin: 1.5rem 0; }
+    .guide-step {
+      display: flex;
+      gap: 1.25rem;
+      padding-bottom: 1.75rem;
+      position: relative;
+    }
+    .guide-step:last-child { padding-bottom: 0; }
+    .guide-step:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 42px;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent), transparent);
+    }
+    .guide-step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      z-index: 1;
+      box-shadow: 0 0 16px rgba(59,130,246,0.2);
+    }
+    .guide-step-content { padding-top: 0.3rem; flex: 1; min-width: 0; }
+    .guide-step-content h3 { font-size: 0.95rem; font-weight: 700; color: var(--white); margin-bottom: 0.4rem; }
+    .guide-step-content p { font-size: 0.875rem; color: var(--muted); line-height: 1.75; margin-bottom: 0.5rem; }
+
+    /* Screenshot placeholder */
+    .screenshot {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem 0;
+      text-align: center;
+    }
+    .screenshot img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .screenshot-caption {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      opacity: 0.7;
+    }
+
+    /* Comparison */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .comparison-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+    }
+    .comparison-item h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .comparison-item:first-child h4 { color: var(--accent2); }
+    .comparison-item:last-child h4 { color: var(--green); }
+    .comparison-item p { font-size: 0.82rem; color: var(--muted); line-height: 1.65; margin-bottom: 0; }
+
+    /* Divider */
+    hr.divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 0 3.5rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.8rem 1.75rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 30px rgba(59,130,246,0.3);
+    }
+    .btn-primary:hover {
+      background: var(--accent2);
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(59,130,246,0.5);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid var(--border2);
+      backdrop-filter: blur(8px);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: var(--border2); color: var(--white); }
+
+    /* CTA */
+    .cta-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+    .cta-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 4rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 50% 0%, rgba(59,130,246,0.1), transparent),
+        radial-gradient(ellipse 40% 60% at 80% 100%, rgba(139,92,246,0.08), transparent);
+    }
+    .cta-box::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--purple), transparent);
+    }
+    .cta-inner { position: relative; }
+    .cta-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: white;
+      margin: 0 auto 1.25rem;
+    }
+    .cta-box h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.03em;
+    }
+    .cta-box p { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: var(--accent2); }
+    .footer-links { display: flex; gap: 1.5rem; }
+
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* Inline code */
+    code {
+      color: var(--green);
+      background: #0a0e1a;
+      padding: 0.1em 0.4em;
+      border-radius: 4px;
+      font-size: 0.85em;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    /* Strong in muted context */
+    strong { color: var(--white); font-weight: 600; }
+
+    @media (max-width: 768px) {
+      .concept-grid { grid-template-columns: 1fr; }
+      .comparison { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-icon">T</div>
+    ted-occ
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">ホーム</a></li>
+    <li><a href="index.html#join">参加方法</a></li>
+    <li><a href="index.html#join" class="nav-cta">参加する</a></li>
+  </ul>
+</nav>
+
+<!-- ── PAGE HERO ── -->
+<section class="page-hero">
+  <div class="page-hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-badge">
+      <i class="fa-solid fa-graduation-cap"></i>
+      Beginner's Guide
+    </div>
+    <h1>はじめての <span class="gradient-text">Git &amp; GitHub</span></h1>
+    <p>参加申請に必要な Git と GitHub の基本操作を、初めての方にもわかるようにステップバイステップで解説します。</p>
+  </div>
+</section>
+
+<!-- ── CONTENT ── -->
+<div class="content-wrap">
+
+  <!-- TOC -->
+  <div class="toc fade-in">
+    <div class="toc-title">目次</div>
+    <ol>
+      <li><a href="#what-is-git">Git とは？ GitHub とは？</a></li>
+      <li><a href="#create-account">GitHub アカウントを作成する</a></li>
+      <li><a href="#fork">リポジトリを Fork する</a></li>
+      <li><a href="#create-file">ファイルを作成・編集する</a></li>
+      <li><a href="#pull-request">Pull Request を送る</a></li>
+      <li><a href="#glossary">用語集</a></li>
+    </ol>
+  </div>
+
+  <!-- ── Section 1: Git & GitHub とは ── -->
+  <div class="guide-section fade-in" id="what-is-git">
+    <div class="guide-section-eyebrow">Section 01</div>
+    <h2>Git とは？ GitHub とは？</h2>
+    <p>まずは、参加申請で使う「Git」と「GitHub」がそれぞれ何なのかを理解しましょう。難しく考える必要はありません。</p>
+
+    <div class="comparison">
+      <div class="comparison-item">
+        <h4><i class="fa-solid fa-code-branch"></i> Git</h4>
+        <p>ファイルの変更履歴を記録・管理するための仕組みです。「いつ、誰が、何を変更したか」がすべて記録されるので、チームで安全にファイルを編集できます。</p>
+      </div>
+      <div class="comparison-item">
+        <h4><i class="fa-brands fa-github"></i> GitHub</h4>
+        <p>Git で管理されたファイルをインターネット上で共有・共同編集するための Web サービスです。ブラウザだけで操作でき、今回の参加申請もブラウザだけで完了できます。</p>
+      </div>
+    </div>
+
+    <div class="info-card blue">
+      <div class="info-card-header">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>ポイント</span>
+      </div>
+      <p>ted-occ への参加申請は、<strong>ブラウザ上の GitHub だけで完結</strong>します。コマンドラインやソフトウェアのインストールは不要です。</p>
+    </div>
+
+    <p>参加申請で登場する主な概念を簡単に紹介します。</p>
+
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="concept-icon"><i class="fa-solid fa-database"></i></div>
+        <h3>リポジトリ</h3>
+        <p>プロジェクトのファイル一式とその変更履歴がまとまった「箱」のようなもの。略して「リポ」や「repo」とも呼ばれます。</p>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon"><i class="fa-solid fa-code-fork"></i></div>
+        <h3>Fork（フォーク）</h3>
+        <p>他の人のリポジトリを自分のアカウントにコピーすること。コピー先で自由に編集しても、元のリポジトリには影響しません。</p>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon"><i class="fa-solid fa-code-commit"></i></div>
+        <h3>コミット</h3>
+        <p>ファイルの変更を「保存」すること。ゲームのセーブポイントのように、いつでもその時点の状態に戻れます。</p>
+      </div>
+      <div class="concept-card">
+        <div class="concept-icon"><i class="fa-solid fa-code-pull-request"></i></div>
+        <h3>Pull Request（PR）</h3>
+        <p>自分が行った変更を、元のリポジトリに取り込んでもらうための「提案」。レビューを経て承認されるとマージ（統合）されます。</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── Section 2: GitHub アカウント作成 ── -->
+  <div class="guide-section fade-in" id="create-account">
+    <div class="guide-section-eyebrow">Section 02</div>
+    <h2>GitHub アカウントを作成する</h2>
+    <p>すでにアカウントをお持ちの方はこのセクションをスキップしてください。</p>
+
+    <div class="guide-steps">
+      <div class="guide-step">
+        <div class="guide-step-circle">1</div>
+        <div class="guide-step-content">
+          <h3>GitHub にアクセスする</h3>
+          <p>ブラウザで <strong>github.com</strong> を開きます。トップページに「Sign up」ボタンが表示されるのでクリックします。</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">2</div>
+        <div class="guide-step-content">
+          <h3>メールアドレスを入力する</h3>
+          <p>普段使っているメールアドレスを入力します。このアドレスに後ほど Organization への招待メールが届きます。</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">3</div>
+        <div class="guide-step-content">
+          <h3>パスワードとユーザー名を設定する</h3>
+          <p><strong>ユーザー名</strong>はチーム内で識別に使われます。本名でなくても構いませんが、わかりやすい名前がおすすめです。参加申請のファイル名にもこのユーザー名を使います。</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">4</div>
+        <div class="guide-step-content">
+          <h3>メール認証を完了する</h3>
+          <p>入力したメールアドレスに確認コードが届きます。コードを入力してアカウント作成を完了させてください。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card green">
+      <div class="info-card-header">
+        <i class="fa-solid fa-lightbulb"></i>
+        <span>ヒント</span>
+      </div>
+      <p>GitHub アカウントは無料で作成できます。有料プランへのアップグレードは不要です。</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── Section 3: Fork ── -->
+  <div class="guide-section fade-in" id="fork">
+    <div class="guide-section-eyebrow">Section 03</div>
+    <h2>リポジトリを Fork する</h2>
+    <p>Fork とは、ted-occ のリポジトリを自分のアカウントにコピーする操作です。コピー先で自由にファイルを追加・編集できます。</p>
+
+    <div class="guide-steps">
+      <div class="guide-step">
+        <div class="guide-step-circle">1</div>
+        <div class="guide-step-content">
+          <h3>リポジトリページを開く</h3>
+          <p>以下のリンクから ted-occ/web-welcome のリポジトリページにアクセスします。</p>
+          <div class="code-block">
+            https://github.com/ted-occ/web-welcome
+          </div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">2</div>
+        <div class="guide-step-content">
+          <h3>「Fork」ボタンをクリックする</h3>
+          <p>ページ右上にある <strong>「Fork」</strong> ボタンをクリックします。ボタンにはフォークのアイコン（<i class="fa-solid fa-code-fork" style="color: var(--accent2);"></i>）が付いています。</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">3</div>
+        <div class="guide-step-content">
+          <h3>Fork 先を確認して作成する</h3>
+          <p>「Create a new fork」画面が表示されます。<strong>Owner</strong>（オーナー）が自分のアカウントになっていることを確認して、<strong>「Create fork」</strong> ボタンをクリックします。設定はそのままで大丈夫です。</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">4</div>
+        <div class="guide-step-content">
+          <h3>Fork 完了を確認する</h3>
+          <p>自分のアカウント配下にリポジトリがコピーされます。ページ左上のリポジトリ名が <code>あなたのユーザー名/web-welcome</code> になっていれば成功です。その下に「forked from ted-occ/web-welcome」と表示されます。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card orange">
+      <div class="info-card-header">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>注意</span>
+      </div>
+      <p>Fork は元のリポジトリへの変更を提案するために行います。Fork 先で編集しても、元のリポジトリには自動で反映されません。変更を反映するには、次のステップで Pull Request を送ります。</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── Section 4: ファイルを作成する ── -->
+  <div class="guide-section fade-in" id="create-file">
+    <div class="guide-section-eyebrow">Section 04</div>
+    <h2>ファイルを作成・編集する</h2>
+    <p>Fork したリポジトリで、自分の自己紹介ファイルを作成します。すべてブラウザ上で行えます。</p>
+
+    <div class="guide-steps">
+      <div class="guide-step">
+        <div class="guide-step-circle">1</div>
+        <div class="guide-step-content">
+          <h3>members フォルダを開く</h3>
+          <p>Fork したリポジトリのファイル一覧から <strong><code>members</code></strong> フォルダをクリックして開きます。</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">2</div>
+        <div class="guide-step-content">
+          <h3>テンプレートの内容をコピーする</h3>
+          <p><strong><code>_template.md</code></strong> をクリックして開き、ファイルの内容をすべてコピーします。右上のコピーボタン（<i class="fa-regular fa-copy" style="color: var(--accent2);"></i>）を使うと簡単です。</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">3</div>
+        <div class="guide-step-content">
+          <h3>新しいファイルを作成する</h3>
+          <p><code>members</code> フォルダに戻り、ページ右上の <strong>「Add file」</strong> > <strong>「Create new file」</strong> をクリックします。</p>
+          <p>ファイル名の入力欄に、自分のGitHubユーザー名を入力し、末尾に <code>.md</code> を付けます。</p>
+          <div class="code-block">
+            <span class="comment"># ファイル名の例（ユーザー名が tanaka-taro の場合）</span><br>
+            tanaka-taro.md
+          </div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">4</div>
+        <div class="guide-step-content">
+          <h3>テンプレートを貼り付けて記入する</h3>
+          <p>エディタ画面にコピーしたテンプレートの内容を貼り付け、各項目を記入します。</p>
+          <div class="info-card purple" style="margin-top: 0.75rem;">
+            <div class="info-card-header">
+              <i class="fa-solid fa-pen-to-square"></i>
+              <span>記入する項目</span>
+            </div>
+            <p><strong>GitHub ユーザー名</strong> — あなたの GitHub ユーザー名</p>
+            <p><strong>自己紹介</strong> — 簡単な自己紹介（経験年数や得意分野など）</p>
+            <p><strong>希望するロール</strong> — FD-E（Engineering）か FD-C（Coordinating）にチェック</p>
+            <p><strong>得意な技術・スキル</strong> — 使える言語やツールなど</p>
+            <p><strong>参加動機</strong> — なぜ ted-occ に参加したいか</p>
+            <p><strong>連絡先（任意）</strong> — メールや SNS（書かなくても OK）</p>
+          </div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">5</div>
+        <div class="guide-step-content">
+          <h3>ファイルをコミットする</h3>
+          <p>記入が終わったら、ページ右上の <strong>「Commit changes...」</strong> ボタンをクリックします。表示されるダイアログで、コミットメッセージはそのままでも構いません。<strong>「Commit changes」</strong> をクリックして保存します。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card green">
+      <div class="info-card-header">
+        <i class="fa-solid fa-lightbulb"></i>
+        <span>ロールの選び方</span>
+      </div>
+      <p><strong>FD-E（Engineering）</strong>は技術的な開発を担当するロール、<strong>FD-C（Coordinating）</strong>は顧客・事業面から開発を支えるロールです。どちらも対等なパートナーであり、上下関係はありません。自分の得意な方を選びましょう。</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── Section 5: Pull Request を送る ── -->
+  <div class="guide-section fade-in" id="pull-request">
+    <div class="guide-section-eyebrow">Section 05</div>
+    <h2>Pull Request を送る</h2>
+    <p>ファイルの作成が完了したら、元のリポジトリに「この変更を取り込んでください」という提案（Pull Request）を送ります。</p>
+
+    <div class="guide-steps">
+      <div class="guide-step">
+        <div class="guide-step-circle">1</div>
+        <div class="guide-step-content">
+          <h3>Pull Request の作成画面を開く</h3>
+          <p>Fork したリポジトリのトップページに戻ると、「This branch is 1 commit ahead of ...」というメッセージが表示されています。その右にある <strong>「Contribute」</strong> ボタンをクリックし、<strong>「Open pull request」</strong> を選択します。</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">2</div>
+        <div class="guide-step-content">
+          <h3>PR のタイトルを設定する</h3>
+          <p>タイトル欄に以下の形式で入力します。<code>@</code> の後にご自身の GitHub ユーザー名を記入してください。</p>
+          <div class="code-block">
+            Join request: @your-github-username
+          </div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">3</div>
+        <div class="guide-step-content">
+          <h3>送信先を確認する</h3>
+          <p>画面上部に「base repository: <strong>ted-occ/web-welcome</strong>」「base: <strong>main</strong>」と表示されていることを確認します。これが「どこに送るか」の指定です。</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">4</div>
+        <div class="guide-step-content">
+          <h3>Pull Request を作成する</h3>
+          <p>内容を確認したら <strong>「Create pull request」</strong> ボタンをクリックします。これで参加申請は完了です！</p>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-circle">5</div>
+        <div class="guide-step-content">
+          <h3>レビューと承認を待つ</h3>
+          <p>TED-Administrator が PR を確認します。問題がなければマージされ、Organization への招待メールが GitHub に登録したメールアドレスに届きます。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card blue">
+      <div class="info-card-header">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>PR 作成後のポイント</span>
+      </div>
+      <p>PR を送った後、レビュアーからコメントで修正を求められることがあります。その場合は、Fork したリポジトリ内の同じファイルを編集するだけで、PR に自動的に反映されます。</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── Section 6: 用語集 ── -->
+  <div class="guide-section fade-in" id="glossary">
+    <div class="guide-section-eyebrow">Section 06</div>
+    <h2>用語集</h2>
+    <p>このガイドや参加申請で出てくる用語をまとめました。</p>
+
+    <div class="info-card blue" style="margin-bottom: 0.75rem;">
+      <div class="info-card-header">
+        <i class="fa-solid fa-database"></i>
+        <span>リポジトリ（Repository）</span>
+      </div>
+      <p>プロジェクトのファイルと変更履歴を保管する場所。GitHub 上で公開・共有できます。</p>
+    </div>
+    <div class="info-card green" style="margin-bottom: 0.75rem;">
+      <div class="info-card-header">
+        <i class="fa-solid fa-code-fork"></i>
+        <span>Fork（フォーク）</span>
+      </div>
+      <p>他人のリポジトリを自分のアカウントにコピーすること。コピー先は独立しており、自由に編集できます。</p>
+    </div>
+    <div class="info-card purple" style="margin-bottom: 0.75rem;">
+      <div class="info-card-header">
+        <i class="fa-solid fa-code-commit"></i>
+        <span>コミット（Commit）</span>
+      </div>
+      <p>ファイルの変更内容を記録すること。「保存」に近い操作で、メッセージ付きで履歴に残ります。</p>
+    </div>
+    <div class="info-card orange" style="margin-bottom: 0.75rem;">
+      <div class="info-card-header">
+        <i class="fa-solid fa-code-branch"></i>
+        <span>ブランチ（Branch）</span>
+      </div>
+      <p>変更を分岐させる仕組み。今回は <code>main</code> ブランチだけ意識すれば大丈夫です。</p>
+    </div>
+    <div class="info-card blue" style="margin-bottom: 0.75rem;">
+      <div class="info-card-header">
+        <i class="fa-solid fa-code-pull-request"></i>
+        <span>Pull Request（PR）</span>
+      </div>
+      <p>自分の変更を元のリポジトリに取り込んでもらうための提案。レビューを経て承認・マージされます。</p>
+    </div>
+    <div class="info-card green">
+      <div class="info-card-header">
+        <i class="fa-solid fa-code-merge"></i>
+        <span>マージ（Merge）</span>
+      </div>
+      <p>Pull Request が承認され、変更が元のリポジトリに統合されること。参加申請の場合、マージ後に招待が届きます。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── CTA ── -->
+<div class="cta-wrap fade-in">
+  <div class="cta-box">
+    <div class="cta-inner">
+      <div class="cta-icon"><i class="fa-solid fa-rocket"></i></div>
+      <h2>準備はできましたか？</h2>
+      <p>ガイドを読んだら、さっそく参加申請を始めましょう。</p>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="https://github.com/ted-occ/web-welcome/fork">
+          <i class="fa-solid fa-code-fork"></i>
+          Fork して始める
+        </a>
+        <a class="btn btn-ghost" href="index.html#join">
+          <i class="fa-solid fa-arrow-left"></i>
+          参加方法に戻る
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="nav-logo" style="font-size: 0.9rem;">
+    <div class="nav-logo-icon" style="width: 24px; height: 24px; font-size: 0.6rem;">T</div>
+    ted-occ
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com/ted-occ"><i class="fa-brands fa-github"></i> GitHub</a>
+    <a href="https://github.com/ted-occ/web-welcome/issues">Issues</a>
+    <a href="https://github.com/ted-occ/web-welcome/blob/main/members/_template.md" target="_blank">テンプレート</a>
+  </div>
+  <span>&copy; 2026 ted-occ</span>
+</footer>
+
+<script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 100);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
