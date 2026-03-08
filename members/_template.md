@@ -7,7 +7,7 @@
 ## 希望するロール
 
 - [ ] FD-E（Engineering）
-- [ ] FD-C（Consulting）
+- [ ] FD-C（Coordinating）
 
 ## 得意な技術・スキル
 
