@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to TED | ted-occ</title>
+  <link rel="icon" type="image/svg+xml" href="assets/discord-icon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -81,14 +82,9 @@
     .nav-logo-icon {
       width: 32px;
       height: 32px;
-      background: linear-gradient(135deg, var(--accent), var(--purple));
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      color: white;
-      font-weight: 900;
+      display: block;
+      object-fit: cover;
     }
     .nav-links { display: flex; gap: 0.25rem; list-style: none; }
     .nav-links a {
@@ -660,7 +656,7 @@
 <!-- ── NAV ── -->
 <nav id="navbar">
   <a class="nav-logo" href="#">
-    <div class="nav-logo-icon">T</div>
+    <img class="nav-logo-icon" src="assets/discord-icon.svg" alt="ted-occ">
     ted-occ
   </a>
   <ul class="nav-links">
@@ -1012,7 +1008,7 @@
 <!-- ── FOOTER ── -->
 <footer>
   <div class="nav-logo" style="font-size: 0.9rem;">
-    <div class="nav-logo-icon" style="width: 24px; height: 24px; font-size: 0.6rem;">T</div>
+    <img class="nav-logo-icon" src="assets/discord-icon.svg" alt="ted-occ" style="width: 24px; height: 24px; border-radius: 6px;">
     ted-occ
   </div>
   <div class="footer-links">
